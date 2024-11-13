@@ -26,7 +26,6 @@ class MainWrapper(ComponentWrapper):
     create_report_error_msg = Component(xpath='//div[text()="Пожалуйста, добавьте название отчета"]')
     newspapers_titles = Components(css='li[class*="MenuItem"]')
     frame = Component(tag='iframe')
-    pdf = Component(css='[type="application/pdf"]')  # как-то бы реализовать проверку ПДФ блока
 
 
 class Main(Component):
