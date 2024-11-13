@@ -5,7 +5,7 @@ from coms.qa.frontend.pages import Page
 from coms.qa.frontend.pages.component.text import Text
 from coms.qa.frontend.pages.component.text_field import TextField
 from selenium.common.exceptions import NoSuchElementException
-
+from coms.qa.frontend.pages.component import Component
 from dit.qa.pages.mm.mm_main_page.components.header import Header
 from dit.qa.pages.mm.mm_main_page.components.main import Main
 from dit.qa.pages.mm.mm_main_page.components.menu import Menu
@@ -17,6 +17,7 @@ class MmMainPage(Page):
     header = Header(id='ms-header')
     menu = Menu(tag='aside')
     main = Main(tag='main')
+    pdf = Component(css='[type="application/pdf"]')
     search_title = Text(tag='h1')
     report_name = TextField(xpath='//label[text()="Название отчета"]/following::div/child::input')
 
@@ -134,11 +135,11 @@ class MmMainPage(Page):
         self.app.restore_implicitly_wait()
 
     def wait_for_loading_newspapers_pdf(self) -> None:
-        # self.driver.switch_to.frame(self.main.frame.webelement)
+        self.driver.switch_to.frame(self.main.frame.webelement)
 
         def condition() -> bool:
             try:
-                return self.main.pdf.visible
+                return self.pdf.visible
 
             except NoSuchElementException:
 
@@ -147,5 +148,4 @@ class MmMainPage(Page):
         self.app.set_implicitly_wait(1)
         wait_for(condition, timeout=40, msg='Газета в блоке PDF-документа не загружена')
         self.app.restore_implicitly_wait()
-
-        # self.driver.switch_to.default_content()
+        self.driver.switch_to.default_content()

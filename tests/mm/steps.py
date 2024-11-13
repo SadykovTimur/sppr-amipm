@@ -211,10 +211,8 @@ def open_newspapers_section(app: Application) -> None:
         try:
             page = MmMainPage(app)
             page.menu.newspapers.click()
-            app.driver.switch_to.frame(page.main.frame.webelement)
 
             page.wait_for_loading_newspapers_pdf()
-            app.driver.switch_to.default_content()
 
             titles = [t.webelement.text for t in page.main.newspapers_titles]
 
