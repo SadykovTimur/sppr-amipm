@@ -1,0 +1,4 @@
+name: 'Открытие АРМ Аналитика'
+cmd: 'pytest --alluredir={allure_reports_path} tests/mm/test_mm_auth_page.py'
+steps:
+  - 'Открытие страницы авторизации'

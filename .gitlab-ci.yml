@@ -1,0 +1,17 @@
+image: python:3.10.6
+
+stages:
+  - lint
+
+code lint:
+  stage: lint
+  script:
+    - python -m venv .venv
+    - source .venv/bin/activate
+    - pip install -U pip wheel
+    - pip install poetry
+    - poetry install --no-interaction
+    - make check
+  except:
+    - api
+    - web

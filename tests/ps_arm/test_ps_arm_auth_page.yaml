@@ -1,0 +1,4 @@
+name: 'Открытие АРМ Редактора'
+cmd: 'pytest --alluredir={allure_reports_path} tests/ps_arm/test_ps_arm_auth_page.py'
+steps:
+  - 'Открытие страницы авторизации'

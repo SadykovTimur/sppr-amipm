@@ -1,0 +1,6 @@
+name: 'Авторизация пользователя ПС АРМ'
+cmd: 'pytest --alluredir={allure_reports_path} tests/ps_arm/test_ps_arm_authorization.py'
+steps:
+  - 'Открытие страницы авторизации'
+  - 'Внесение авторизационных данных, нажатие кнопки "Войти"'
+  - 'Открытие главной страницы'

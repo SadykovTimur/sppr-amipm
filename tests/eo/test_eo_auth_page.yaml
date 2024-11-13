@@ -1,0 +1,4 @@
+name: 'Открытие стартовой страницы ЭО'
+cmd: 'pytest --alluredir={allure_reports_path} tests/eo/test_eo_auth_page.py'
+steps:
+  - 'Открытие страницы авторизации'

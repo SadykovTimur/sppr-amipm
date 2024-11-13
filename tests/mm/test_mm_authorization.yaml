@@ -1,0 +1,6 @@
+name: 'Авторизация пользователя ММ'
+cmd: 'pytest --alluredir={allure_reports_path} tests/mm/test_codex_authorization.py'
+steps:
+  - 'Открытие страницы авторизации'
+  - 'Внесение авторизационных данных, нажатие кнопки "Войти"'
+  - 'Открытие главной страницы'
