@@ -6,7 +6,7 @@ from coms.qa.frontend.helpers.attach_helper import screenshot_attach
 from dit.qa.pages.eo.eo_auth_page import EOAuthPage
 from dit.qa.pages.eo.eo_main_page import EOMainPage
 
-__all__ = ['open_auth_page', 'sign_in', 'open_eo_main_page', 'logout']
+__all__ = ['open_auth_page', 'sign_in', 'open_eo_main_page', 'logout', 'click_grid_cell', 'fill_in_grid_cell']
 
 
 def open_auth_page(app: Application, request: FixtureRequest) -> None:
@@ -65,5 +65,35 @@ def logout(app: Application) -> None:
             screenshot_attach(app, 'logout')
         except Exception as e:
             screenshot_attach(app, 'logout_error')
+
+            raise e
+
+
+def click_grid_cell(app: Application, coord_x: int, coord_y: int) -> None:
+    with allure.step('Clicking on grid cell'):
+        try:
+            page = EOMainPage(app)
+            page.activate_grid_cell(coord_x, coord_y)
+
+            page.wait_for_activating_event()
+
+            screenshot_attach(app, 'grid_cell_click')
+        except Exception as e:
+            screenshot_attach(app, 'grid_cell_click_error')
+
+            raise e
+
+
+def fill_in_grid_cell(app: Application, text: str) -> None:
+    with allure.step('Filling in grid cell'):
+        try:
+            page = EOMainPage(app)
+            page.events[0].webelement.send_keys(text)
+
+            page.wait_for_filling_in_grid_cell(text)
+
+            screenshot_attach(app, 'grid_cell_fill_in')
+        except Exception as e:
+            screenshot_attach(app, 'grid_cell_fill_in_error')
 
             raise e
