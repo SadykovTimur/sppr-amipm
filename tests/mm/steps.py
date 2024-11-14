@@ -23,7 +23,9 @@ __all__ = [
     'create_report',
     'cancel_create_report',
     'open_newspapers_section',
-    'open_newspaper_pdf'
+    'open_newspaper_pdf',
+    'open_subreport',
+    'close_subreport'
 ]
 
 
@@ -237,5 +239,35 @@ def open_newspaper_pdf(app: Application) -> None:
             screenshot_attach(app, 'open_newspaper_pdf')
         except Exception as e:
             screenshot_attach(app, 'open_newspaper_pdf_error')
+
+            raise e
+
+
+def open_subreport(app: Application) -> None:
+    with allure.step('Opening Subreport'):
+        try:
+            page = MmMainPage(app)
+            page.create_subreport.click()
+
+            page.wait_for_loading_subreport()
+
+            screenshot_attach(app, 'subreport')
+        except Exception as e:
+            screenshot_attach(app, 'subreport_error')
+
+            raise e
+
+
+def close_subreport(app: Application) -> None:
+    with allure.step('Closing Subreport'):
+        try:
+            page = MmMainPage(app)
+            page.main.cancel.click()
+
+            page.wait_for_loading()
+
+            screenshot_attach(app, 'main_page')
+        except Exception as e:
+            screenshot_attach(app, 'main_page_error')
 
             raise e

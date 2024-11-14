@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from coms.qa.core.helpers import wait_for
 from coms.qa.frontend.pages import Page
+from coms.qa.frontend.pages.component import Component
+from coms.qa.frontend.pages.component.button import Button
 from coms.qa.frontend.pages.component.text import Text
 from coms.qa.frontend.pages.component.text_field import TextField
 from selenium.common.exceptions import NoSuchElementException
-from coms.qa.frontend.pages.component import Component
+
 from dit.qa.pages.mm.mm_main_page.components.header import Header
 from dit.qa.pages.mm.mm_main_page.components.main import Main
 from dit.qa.pages.mm.mm_main_page.components.menu import Menu
@@ -14,20 +16,30 @@ __all__ = ['MmMainPage']
 
 
 class MmMainPage(Page):
+    loader = Component(css='[class*="LinearProgress-root"]')
     header = Header(id='ms-header')
     menu = Menu(tag='aside')
     main = Main(tag='main')
     pdf = Component(css='[type="application/pdf"]')
-    search_title = Text(tag='h1')
+    title = Text(id='ms-sub-header-top')
     report_name = TextField(xpath='//label[text()="Название отчета"]/following::div/child::input')
+    create_subreport = Button(xpath='//button[text()="Создать подотчет"]')
+
+    @property
+    def is_loader_hidden(self) -> bool:
+        try:
+            return not self.loader.visible
+        except NoSuchElementException:
+            return True
 
     def wait_for_loading(self) -> None:
         def condition() -> bool:
             try:
+                assert self.is_loader_hidden
                 assert self.header.visible
                 assert self.menu.visible
 
-                return self.main.visible
+                return self.main.articles[0].visible
 
             except NoSuchElementException:
 
@@ -40,7 +52,7 @@ class MmMainPage(Page):
     def wait_for_loading_search_report(self) -> None:
         def condition() -> bool:
             try:
-                assert self.search_title == "Создание поискового отчета"
+                assert self.title == "Создание поискового отчета"
                 assert self.report_name.visible
                 assert self.main.search_options_bar.visible
                 assert self.main.search.visible
@@ -147,5 +159,24 @@ class MmMainPage(Page):
 
         self.app.set_implicitly_wait(1)
         wait_for(condition, timeout=40, msg='Газета в блоке PDF-документа не загружена')
+        self.app.restore_implicitly_wait()
+        self.driver.switch_to.default_content()
+
+    def wait_for_loading_subreport(self) -> None:
+        def condition() -> bool:
+            try:
+                assert self.title == "Создание подотчета"
+                assert self.main.articles[0].visible
+                assert self.main.search_options_bar.visible
+                assert self.main.search.visible
+
+                return self.main.cancel.visible
+
+            except NoSuchElementException:
+
+                return False
+
+        self.app.set_implicitly_wait(1)
+        wait_for(condition, timeout=40, msg='Форма создания подотчета не загружена')
         self.app.restore_implicitly_wait()
         self.driver.switch_to.default_content()

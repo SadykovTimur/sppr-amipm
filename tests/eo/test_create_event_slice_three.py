@@ -6,14 +6,14 @@ from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.constants import CLIENT_BROWSERS, CLIENT_DEVICE_TYPE
 
-from tests.eo.steps import click_grid_cell, fill_in_grid_cell, open_auth_page, open_eo_main_page, sign_in
+from tests.eo.steps import click_grid_cell, create_event, fill_in_grid_cell, open_auth_page, open_eo_main_page, sign_in
 
 
 @allure.epic('SPPR AMIPM')
-@allure.title('Создание событий по клику в срезе 2')
+@allure.title('Создание событий по клику в срезе 3')
 @pytest.mark.parametrize('browser', CLIENT_BROWSERS)
 @pytest.mark.parametrize('device_type', CLIENT_DEVICE_TYPE)
-def test_create_event_slice_two(
+def test_create_event_slice_three(
     request: FixtureRequest, make_app: Callable[..., Application], browser: str, device_type: str
 ) -> None:
     app = make_app(browser, device_type)
@@ -24,5 +24,5 @@ def test_create_event_slice_two(
     open_eo_main_page(app)
 
     click_grid_cell(app, 990, 260)
-
     fill_in_grid_cell(app, 'Тест')
+    create_event(app)

@@ -6,7 +6,7 @@ from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.constants import CLIENT_BROWSERS, CLIENT_DEVICE_TYPE
 
-from tests.eo.steps import open_auth_page, open_eo_main_page, sign_in, click_grid_cell
+from tests.eo.steps import click_grid_cell, open_auth_page, open_eo_main_page, sign_in
 
 
 @allure.epic('SPPR AMIPM')

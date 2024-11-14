@@ -1,5 +1,6 @@
 from coms.qa.frontend.pages.component import Component, Components, ComponentWrapper
 from coms.qa.frontend.pages.component.button import Button
+from coms.qa.frontend.pages.component.text import Text
 
 from dit.qa.pages.mm.mm_main_page.components.search_options_bar import SearchOptionsBar
 
@@ -22,7 +23,8 @@ class MainWrapper(ComponentWrapper):
         xpath='//h1[text()="Источники"]/parent::div/following::input[contains(@class, "MuiInputBase-input")]'
     )
     objects_field = Component(
-        xpath='//h1[text()="Обьекты"]/parent::div/following::input[contains(@class, "MuiInputBase-input")]')
+        xpath='//h1[text()="Обьекты"]/parent::div/following::input[contains(@class, "MuiInputBase-input")]'
+    )
     create_report_error_msg = Component(xpath='//div[text()="Пожалуйста, добавьте название отчета"]')
     newspapers_titles = Components(css='li[class*="MenuItem"]')
     frame = Component(tag='iframe')

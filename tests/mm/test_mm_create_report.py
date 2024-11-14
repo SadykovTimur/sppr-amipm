@@ -8,15 +8,16 @@ from coms.qa.frontend.constants import CLIENT_BROWSERS, CLIENT_DEVICE_TYPE
 
 from dit.qa.constans import AUTHORS, SOURCES
 from tests.mm.steps import (
+    create_report,
     open_auth_page,
     open_mm_main_page,
     open_mm_search_report,
     set_authors_filter,
     set_context_query_filter,
+    set_objects_filter,
     set_period_filter,
     set_sources_filter,
     sign_in,
-    set_objects_filter, create_report,
 )
 
 

@@ -1,6 +1,7 @@
-name: 'Авторизация пользователя ММ'
-cmd: 'pytest --alluredir={allure_reports_path} tests/mm/test_mm_authorization.py'
+name: 'Открытие формы создания подотчета'
+cmd: 'pytest --alluredir={allure_reports_path} tests/mm/test_mm_open_subreport_form.py'
 steps:
   - 'Открытие страницы авторизации'
   - 'Внесение авторизационных данных, нажатие кнопки "Войти"'
   - 'Открытие главной страницы'
+  - 'Открытие формы создания подотчета'

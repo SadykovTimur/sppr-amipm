@@ -6,23 +6,22 @@ from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.constants import CLIENT_BROWSERS, CLIENT_DEVICE_TYPE
 
-from tests.eo.steps import click_grid_cell, fill_in_grid_cell, open_auth_page, open_eo_main_page, sign_in
+from tests.mm.steps import open_auth_page, open_mm_main_page, sign_in, open_subreport, close_subreport
 
 
 @allure.epic('SPPR AMIPM')
-@allure.title('Создание событий по клику в срезе 2')
+@allure.title('Отмена создания подотчета')
 @pytest.mark.parametrize('browser', CLIENT_BROWSERS)
 @pytest.mark.parametrize('device_type', CLIENT_DEVICE_TYPE)
-def test_create_event_slice_two(
+def test_mm_close_subreport_form(
     request: FixtureRequest, make_app: Callable[..., Application], browser: str, device_type: str
 ) -> None:
     app = make_app(browser, device_type)
 
     open_auth_page(app, request)
 
-    sign_in(app, request.config.option.username_eo, request.config.option.password_eo)
-    open_eo_main_page(app)
+    sign_in(app, request.config.option.username_mm, request.config.option.password_mm)
+    open_mm_main_page(app)
 
-    click_grid_cell(app, 990, 260)
-
-    fill_in_grid_cell(app, 'Тест')
+    open_subreport(app)
+    close_subreport(app)
