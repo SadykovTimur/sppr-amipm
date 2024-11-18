@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from coms.qa.core.helpers import wait_for
 from coms.qa.frontend.pages import Page
-from coms.qa.frontend.pages.component import Component
+from coms.qa.frontend.pages.component import Component, Components
 from coms.qa.frontend.pages.component.button import Button
 from coms.qa.frontend.pages.component.text import Text
 from coms.qa.frontend.pages.component.text_field import TextField
@@ -24,6 +24,7 @@ class MmMainPage(Page):
     title = Text(id='ms-sub-header-top')
     report_name = TextField(xpath='//label[text()="Название отчета"]/following::div/child::input')
     create_subreport = Button(xpath='//button[text()="Создать подотчет"]')
+    pagination = Components(css='[class*="PaginationItem-page"]')
 
     @property
     def is_loader_hidden(self) -> bool:
@@ -178,5 +179,21 @@ class MmMainPage(Page):
 
         self.app.set_implicitly_wait(1)
         wait_for(condition, timeout=40, msg='Форма создания подотчета не загружена')
+        self.app.restore_implicitly_wait()
+        self.driver.switch_to.default_content()
+
+    def wait_for_loading_publication(self) -> None:
+        def condition() -> bool:
+            try:
+                assert self.main.publication_content.visible
+
+                return self.main.publication_metrics.visible
+
+            except NoSuchElementException:
+
+                return False
+
+        self.app.set_implicitly_wait(1)
+        wait_for(condition, timeout=40, msg='Форма просмотра публикации не загружена')
         self.app.restore_implicitly_wait()
         self.driver.switch_to.default_content()

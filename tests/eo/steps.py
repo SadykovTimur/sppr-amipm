@@ -1,3 +1,6 @@
+import os.path
+from time import sleep
+
 import allure
 from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
@@ -18,6 +21,8 @@ __all__ = [
     'save_event_by_enter',
     'editing_grid_cell',
     'move_event',
+    'open_event',
+    'delete_event',
 ]
 
 
@@ -145,7 +150,7 @@ def editing_grid_cell(app: Application, text: str) -> None:
     with allure.step('Editing grid cell'):
         try:
             page = EOMainPage(app)
-            page.events_cell[-1].webelement.click()
+            page.events_cell.webelement.click()
             page.events_textarea[-1].webelement.clear()
             page.events_textarea[-1].webelement.send_keys(text)
 
@@ -162,12 +167,58 @@ def move_event(app: Application, text: str, x_coord: int, y_coord: int) -> None:
     with allure.step('Moving event to another grid cell'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).drag_and_drop_by_offset(page.events_cell[-1].webelement, x_coord, y_coord).perform()
+            ActionChains(app.driver).drag_and_drop_by_offset(
+                page.events_cell.webelement, x_coord, y_coord
+            ).perform()
 
             page.wait_for_saving_event(text)
 
             screenshot_attach(app, 'grid_cell')
         except Exception as e:
             screenshot_attach(app, 'grid_cell_error')
+
+            raise e
+
+
+def open_event(app: Application) -> None:
+    with allure.step('Opening event'):
+        try:
+            page = EOMainPage(app)
+            ActionChains(app.driver).double_click(page.events_cell.webelement).perform()
+
+            page.edit.click()
+            # sleep(5)
+            # page.wait_for_loadig_edit_mode()
+
+            page.upload.wait_for_visibility().webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
+            # page.upload.webelement.send_keys("dit/qa/test_files/test_file2.txt")
+            # page.upload.webelement.send_keys("dit/qa/test_files/test_file3.txt")
+            # page.upload.webelement.send_keys("dit/qa/test_files/test_file4.txt")
+            # page.upload.webelement.send_keys("dit/qa/test_files/test_file5.txt")
+
+            page.save.click()
+            # sleep(30)
+
+            screenshot_attach(app, 'event')
+        except Exception as e:
+            screenshot_attach(app, 'event_error')
+
+            raise e
+
+
+def delete_event(app: Application) -> None:
+    with allure.step('Deleting Event'):
+        try:
+            page = EOMainPage(app)
+            ActionChains(app.driver).context_click(page.events_cell.webelement).perform()
+
+            page.event_delete.click()
+            page.modal_delete.click()
+
+            page.wait_for_deleting_event()
+
+            screenshot_attach(app, 'event')
+        except Exception as e:
+            screenshot_attach(app, 'event_error')
 
             raise e

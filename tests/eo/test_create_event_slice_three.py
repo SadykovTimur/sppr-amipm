@@ -6,7 +6,15 @@ from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.constants import CLIENT_BROWSERS, CLIENT_DEVICE_TYPE
 
-from tests.eo.steps import click_grid_cell, create_event, fill_in_grid_cell, open_auth_page, open_eo_main_page, sign_in
+from tests.eo.steps import (
+    click_grid_cell,
+    create_event,
+    delete_event,
+    fill_in_grid_cell,
+    open_auth_page,
+    open_eo_main_page,
+    sign_in,
+)
 
 
 @allure.epic('SPPR AMIPM')
@@ -25,4 +33,6 @@ def test_create_event_slice_three(
 
     click_grid_cell(app, 990, 260)
     fill_in_grid_cell(app, 'Тест')
-    create_event(app)
+    create_event(app, '09:30\nТест')
+
+    delete_event(app)

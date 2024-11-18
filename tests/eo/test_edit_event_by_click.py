@@ -10,6 +10,7 @@ from coms.qa.frontend.constants import CLIENT_BROWSERS, CLIENT_DEVICE_TYPE
 from tests.eo.steps import (
     click_grid_cell,
     create_event,
+    delete_event,
     editing_grid_cell,
     fill_in_grid_cell,
     open_auth_page,
@@ -39,3 +40,5 @@ def test_edit_event_by_click(
 
     editing_grid_cell(app, 'Ретест')
     save_event_by_enter(app, '09:30\nРетест')
+
+    delete_event(app)

@@ -1,7 +1,7 @@
 from coms.qa.frontend.pages.component import Component, Components, ComponentWrapper
 from coms.qa.frontend.pages.component.button import Button
-from coms.qa.frontend.pages.component.text import Text
 
+from dit.qa.pages.eo.eo_main_page.components.articles import Articles
 from dit.qa.pages.mm.mm_main_page.components.search_options_bar import SearchOptionsBar
 
 __all__ = ['Main']
@@ -13,7 +13,7 @@ class MainWrapper(ComponentWrapper):
     cancel = Button(xpath='//button[text()="Отмена"]')
     empty_content = Component(xpath='//div[text()="Добавьте фильтры, которые хотите применить"]')
     context_query_field = Component(xpath='//textarea[@placeholder="Введите слово или фразу для поиска..."]')
-    articles = Components(tag='article')
+    articles = Articles(tag='article')
     authors_field = Component(
         xpath='//h1[text()="Авторы"]/parent::div/following::input[contains(@class, "MuiInputBase-input")]'
     )
@@ -28,6 +28,8 @@ class MainWrapper(ComponentWrapper):
     create_report_error_msg = Component(xpath='//div[text()="Пожалуйста, добавьте название отчета"]')
     newspapers_titles = Components(css='li[class*="MenuItem"]')
     frame = Component(tag='iframe')
+    publication_content = Component(class_name='document-content')
+    publication_metrics = Component(class_name='document-metrics')
 
 
 class Main(Component):

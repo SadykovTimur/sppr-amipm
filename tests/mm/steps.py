@@ -25,8 +25,12 @@ __all__ = [
     'open_newspapers_section',
     'open_newspaper_pdf',
     'open_subreport',
-    'close_subreport'
+    'close_subreport',
+    'select_report_page',
+    'open_publication',
 ]
+
+from dit.qa.pages.mm.mm_publication_page import MmPublicationPage
 
 
 def open_auth_page(app: Application, request: FixtureRequest) -> None:
@@ -269,5 +273,38 @@ def close_subreport(app: Application) -> None:
             screenshot_attach(app, 'main_page')
         except Exception as e:
             screenshot_attach(app, 'main_page_error')
+
+            raise e
+
+
+def select_report_page(app: Application, page_number: str) -> None:
+    with allure.step('Selecting report page'):
+        try:
+            page = MmMainPage(app)
+            pages_paginator = {'Вторая страница': 1, 'Последняя страница': -1}
+            page.pagination[pages_paginator[page_number]].webelement.click()
+
+            page.wait_for_loading()
+
+            assert page.pagination[pages_paginator[page_number]].webelement.get_attribute("aria-current")
+
+            screenshot_attach(app, 'report_page')
+        except Exception as e:
+            screenshot_attach(app, 'report_page_error')
+
+            raise e
+
+
+def open_publication(app: Application) -> None:
+    with allure.step('Opening publication page'):
+        try:
+            MmMainPage(app).main.articles[0].title.webelement.click()
+
+            app.driver.switch_to.window(app.driver.window_handles[-1])
+            MmPublicationPage(app).wait_for_loading()
+
+            screenshot_attach(app, 'publication_page')
+        except Exception as e:
+            screenshot_attach(app, 'publication_page_error')
 
             raise e
