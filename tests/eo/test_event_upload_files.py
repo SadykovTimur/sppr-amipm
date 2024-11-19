@@ -32,10 +32,10 @@ def test_event_upload_files(
     sign_in(app, request.config.option.username_eo, request.config.option.password_eo)
     open_eo_main_page(app)
 
-    # click_grid_cell(app, 990, 260)
-    # fill_in_grid_cell(app, 'Тест')
-    # create_event(app, '09:30\nТест')
+    click_grid_cell(app, 990, 260)
+    fill_in_grid_cell(app, 'Тест')
+    create_event(app, '09:30\nТест')
 
     open_event(app)
 
-    # delete_event(app)
+    delete_event(app)

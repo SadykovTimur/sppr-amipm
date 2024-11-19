@@ -1,7 +1,3 @@
-import json
-import os.path
-from time import sleep
-
 import allure
 from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
@@ -168,7 +164,7 @@ def move_event(app: Application, text: str, x_coord: int, y_coord: int) -> None:
     with allure.step('Moving event to another grid cell'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).drag_and_drop_by_offset(
+            ActionChains(app.driver).drag_and_drop_by_offset(  # type: ignore[no-untyped-call]
                 page.events_cell.webelement, x_coord, y_coord
             ).perform()
 
@@ -185,13 +181,17 @@ def open_event(app: Application) -> None:
     with allure.step('Opening event'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).double_click(page.events_cell.webelement).perform()
+            ActionChains(app.driver).double_click(  # type: ignore[no-untyped-call]
+                page.events_cell.webelement
+            ).perform()
 
             page.edit.click()
 
             # page.wait_for_loadig_edit_mode()
 
-            page.upload.webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
+            page.upload.webelement.send_keys(
+                "/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt"
+            )
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file2.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file3.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file4.txt")
@@ -210,7 +210,9 @@ def delete_event(app: Application) -> None:
     with allure.step('Deleting Event'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).context_click(page.events_cell.webelement).perform()
+            ActionChains(app.driver).context_click(  # type: ignore[no-untyped-call]
+                page.events_cell.webelement
+            ).perform()
 
             page.event_delete.click()
             page.modal_delete.click()

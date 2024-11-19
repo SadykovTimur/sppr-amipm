@@ -1,5 +1,3 @@
-from time import sleep
-
 import allure
 from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
@@ -148,7 +146,9 @@ def set_sources_filter(app: Application, sources: list) -> None:
         try:
             page = MmMainPage(app)
             page.main.search_options_bar.sources.click()
-            ActionChains(app.driver).scroll_to_element(page.main.search.webelement).perform()
+            ActionChains(app.driver).scroll_to_element(  # type: ignore[no-untyped-call]
+                page.main.search.webelement
+            ).perform()
             page.main.sources_field.webelement.click()
 
             for source in sources:
@@ -169,7 +169,9 @@ def set_objects_filter(app: Application, text: str) -> None:
         try:
             page = MmMainPage(app)
             page.main.search_options_bar.objects.click()
-            ActionChains(app.driver).scroll_to_element(page.main.search.webelement).perform()
+            ActionChains(app.driver).scroll_to_element(  # type: ignore[no-untyped-call]
+                page.main.search.webelement
+            ).perform()
             page.main.objects_field.webelement.send_keys(text)
             page.main.field_dropdown.webelement.click()
 
