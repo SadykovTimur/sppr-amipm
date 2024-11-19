@@ -1,3 +1,4 @@
+import json
 import os.path
 from time import sleep
 
@@ -187,17 +188,16 @@ def open_event(app: Application) -> None:
             ActionChains(app.driver).double_click(page.events_cell.webelement).perform()
 
             page.edit.click()
-            # sleep(5)
+
             # page.wait_for_loadig_edit_mode()
 
-            page.upload.wait_for_visibility().webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
+            page.upload.webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file2.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file3.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file4.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file5.txt")
 
             page.save.click()
-            # sleep(30)
 
             screenshot_attach(app, 'event')
         except Exception as e:
