@@ -1,5 +1,6 @@
-import os.path
+import os
 from time import sleep
+from coms.qa.core.helpers import wait_for
 
 import allure
 from _pytest.fixtures import FixtureRequest
@@ -7,6 +8,8 @@ from coms.qa.fixtures.application import Application
 from coms.qa.frontend.helpers.attach_helper import screenshot_attach
 from selenium.webdriver import ActionChains, Keys
 
+from dit.qa.api.upload import upload
+from dit.qa.helpers import filter_logs
 from dit.qa.pages.eo.eo_auth_page import EOAuthPage
 from dit.qa.pages.eo.eo_main_page import EOMainPage
 
@@ -189,8 +192,10 @@ def open_event(app: Application) -> None:
             page.edit.click()
             # sleep(5)
             # page.wait_for_loadig_edit_mode()
+            token = wait_message_in_logs(app, 'My')
+            upload('https://office.mos.ru/api/new/Document/Upload', token, f"{os.getcwd()}/newfile.txt")
 
-            page.upload.wait_for_visibility().webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
+            # page.upload.wait_for_visibility().webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file2.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file3.txt")
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file4.txt")
@@ -222,3 +227,21 @@ def delete_event(app: Application) -> None:
             screenshot_attach(app, 'event_error')
 
             raise e
+
+
+def wait_message_in_logs(app: Application, url: str) -> str:
+    def condition() -> bool:
+        try:
+            logs = app.driver.get_log('performance')
+            f_logs = filter_logs(logs, 'Network.requestWillBeSentExtraInfo', url)
+
+            assert f_logs
+            return f_logs[0]['message']['params']['headers']['authorization']
+
+        except [IndexError, AssertionError]:
+
+            return False
+
+    token = wait_for(condition, msg=f'Запрос {url} не был получен')
+
+    return token
