@@ -14,6 +14,7 @@ __all__ = ['EOMainPage']
 
 
 class EOMainPage(Page):
+    loader = Component(css='[class*="hKGepO"]')
     header = Header(tag='header')
     calendars = Components(css='[class*="DateCalendar-root"]')
     main = Component(css='[class*="media-screen"]')
@@ -28,6 +29,13 @@ class EOMainPage(Page):
     save = Button(xpath='//button[text()="Сохранить"]')
     event_delete = Button(xpath='//div[text()="Удалить"]')
     modal_delete = Button(xpath='//button[text()="Удалить"]')
+
+    @property
+    def is_loader_hidden(self) -> bool:
+        try:
+            return not self.loader.visible
+        except NoSuchElementException:
+            return True
 
     @property
     def is_event_deleted(self) -> bool:
@@ -45,6 +53,7 @@ class EOMainPage(Page):
     def wait_for_loading(self) -> None:
         def condition() -> bool:
             try:
+                assert self.is_loader_hidden
                 assert self.header.visible
                 assert self.calendars[0].visible
 
