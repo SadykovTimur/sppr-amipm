@@ -10,7 +10,7 @@ from tests.ps_arm.steps import open_auth_page, open_main_page, sign_in
 
 
 @allure.epic('SPPR AMIPM')
-@allure.title('Авторизация пользователя')
+@allure.title('Авторизация пользователя ПС АРМ')
 @pytest.mark.parametrize('browser', CLIENT_BROWSERS)
 @pytest.mark.parametrize('device_type', CLIENT_DEVICE_TYPE)
 def test_ps_arm_authorization(
