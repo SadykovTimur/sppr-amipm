@@ -1,14 +1,12 @@
-from time import sleep
-
 import allure
 from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.helpers.attach_helper import screenshot_attach
-from selenium.webdriver import ActionChains
 
 from dit.qa.constans import NEWSPAPERS
 from dit.qa.pages.mm.mm_auth_page import MMAuthPage
 from dit.qa.pages.mm.mm_main_page import MmMainPage
+from dit.qa.pages.mm.mm_publication_page import MmPublicationPage
 
 __all__ = [
     'open_auth_page',
@@ -30,11 +28,9 @@ __all__ = [
     'open_publication',
 ]
 
-from dit.qa.pages.mm.mm_publication_page import MmPublicationPage
-
 
 def open_auth_page(app: Application, request: FixtureRequest) -> None:
-    with allure.step('Opening Auth page'):
+    with allure.step('Opening ММ Auth page'):
         try:
             page = MMAuthPage(app)
             page.base_url = f'https://{request.config.option.ui_url_mm}'
@@ -44,7 +40,7 @@ def open_auth_page(app: Application, request: FixtureRequest) -> None:
 
             screenshot_attach(app, 'mm_auth_page')
         except Exception as e:
-            screenshot_attach(app, 'auth_page_error')
+            screenshot_attach(app, 'mm_auth_page_error')
 
             raise e
 
@@ -148,7 +144,7 @@ def set_sources_filter(app: Application, sources: list) -> None:
         try:
             page = MmMainPage(app)
             page.main.search_options_bar.sources.click()
-            ActionChains(app.driver).scroll_to_element(page.main.search.webelement).perform()
+            app.scroll_to_element(page.main.search.webelement)
             page.main.sources_field.webelement.click()
 
             for source in sources:
@@ -169,7 +165,7 @@ def set_objects_filter(app: Application, text: str) -> None:
         try:
             page = MmMainPage(app)
             page.main.search_options_bar.objects.click()
-            ActionChains(app.driver).scroll_to_element(page.main.search.webelement).perform()
+            app.scroll_to_element(page.main.search.webelement)
             page.main.objects_field.webelement.send_keys(text)
             page.main.field_dropdown.webelement.click()
 
@@ -240,9 +236,9 @@ def open_newspaper_pdf(app: Application) -> None:
 
             page.wait_for_loading_newspapers_pdf()
 
-            screenshot_attach(app, 'open_newspaper_pdf')
+            screenshot_attach(app, 'newspaper_pdf')
         except Exception as e:
-            screenshot_attach(app, 'open_newspaper_pdf_error')
+            screenshot_attach(app, 'newspaper_pdf_error')
 
             raise e
 
@@ -270,9 +266,9 @@ def close_subreport(app: Application) -> None:
 
             page.wait_for_loading()
 
-            screenshot_attach(app, 'main_page')
+            screenshot_attach(app, 'close_subreport')
         except Exception as e:
-            screenshot_attach(app, 'main_page_error')
+            screenshot_attach(app, 'close_subreport_error')
 
             raise e
 
@@ -301,6 +297,7 @@ def open_publication(app: Application) -> None:
             MmMainPage(app).main.articles[0].title.webelement.click()
 
             app.driver.switch_to.window(app.driver.window_handles[-1])
+
             MmPublicationPage(app).wait_for_loading()
 
             screenshot_attach(app, 'publication_page')

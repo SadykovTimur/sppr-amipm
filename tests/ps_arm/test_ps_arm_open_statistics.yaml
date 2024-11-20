@@ -1,4 +1,4 @@
-name: 'АРМ Редактора - Задать период'
+name: 'АРМ Редактора - Статистика'
 cmd: 'pytest --alluredir={allure_reports_path} tests/ps_arm/test_ps_arm_open_statistics.py'
 steps:
   - 'Открытие страницы авторизации'

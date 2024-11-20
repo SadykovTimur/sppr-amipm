@@ -10,7 +10,7 @@ from tests.mm.steps import open_auth_page, open_mm_main_page, sign_in
 
 
 @allure.epic('SPPR AMIPM')
-@allure.title('Авторизация пользователя')
+@allure.title('Авторизация пользователя ММ')
 @pytest.mark.parametrize('browser', CLIENT_BROWSERS)
 @pytest.mark.parametrize('device_type', CLIENT_DEVICE_TYPE)
 def test_mm_authorization(

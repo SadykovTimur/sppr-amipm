@@ -1,8 +1,7 @@
+import allure
 import os
-from time import sleep
 from coms.qa.core.helpers import wait_for
 
-import allure
 from _pytest.fixtures import FixtureRequest
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.helpers.attach_helper import screenshot_attach
@@ -30,7 +29,7 @@ __all__ = [
 
 
 def open_auth_page(app: Application, request: FixtureRequest) -> None:
-    with allure.step('Opening Auth page'):
+    with allure.step('Opening EO Auth page'):
         try:
             page = EOAuthPage(app)
             page.base_url = f'https://{request.config.option.ui_url_eo}'
@@ -97,9 +96,9 @@ def click_grid_cell(app: Application, coord_x: int, coord_y: int) -> None:
 
             page.wait_for_activating_event()
 
-            screenshot_attach(app, 'grid_cell_click')
+            screenshot_attach(app, 'grid_cell')
         except Exception as e:
-            screenshot_attach(app, 'grid_cell_click_error')
+            screenshot_attach(app, 'grid_cell_error')
 
             raise e
 
@@ -142,9 +141,9 @@ def save_event_by_enter(app: Application, text: str) -> None:
 
             page.wait_for_saving_event(text)
 
-            screenshot_attach(app, 'event')
+            screenshot_attach(app, 'event_by_enter')
         except Exception as e:
-            screenshot_attach(app, 'event_error')
+            screenshot_attach(app, 'event_by_enter_error')
 
             raise e
 
@@ -170,15 +169,15 @@ def move_event(app: Application, text: str, x_coord: int, y_coord: int) -> None:
     with allure.step('Moving event to another grid cell'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).drag_and_drop_by_offset(
+            ActionChains(app.driver).drag_and_drop_by_offset(  # type: ignore[no-untyped-call]
                 page.events_cell.webelement, x_coord, y_coord
             ).perform()
 
             page.wait_for_saving_event(text)
 
-            screenshot_attach(app, 'grid_cell')
+            screenshot_attach(app, 'move_event_grid_cell')
         except Exception as e:
-            screenshot_attach(app, 'grid_cell_error')
+            screenshot_attach(app, 'move_event_grid_cell_error')
 
             raise e
 
@@ -187,10 +186,12 @@ def open_event(app: Application) -> None:
     with allure.step('Opening event'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).double_click(page.events_cell.webelement).perform()
+            ActionChains(app.driver).double_click(  # type: ignore[no-untyped-call]
+                page.events_cell.webelement
+            ).perform()
 
             page.edit.click()
-            # sleep(5)
+
             # page.wait_for_loadig_edit_mode()
             token = wait_message_in_logs(app, 'My')
             upload('https://office.mos.ru/api/new/Document/Upload', token, f"{os.getcwd()}/newfile.txt")
@@ -202,7 +203,6 @@ def open_event(app: Application) -> None:
             # page.upload.webelement.send_keys("dit/qa/test_files/test_file5.txt")
 
             page.save.click()
-            # sleep(30)
 
             screenshot_attach(app, 'event')
         except Exception as e:
@@ -215,16 +215,18 @@ def delete_event(app: Application) -> None:
     with allure.step('Deleting Event'):
         try:
             page = EOMainPage(app)
-            ActionChains(app.driver).context_click(page.events_cell.webelement).perform()
+            ActionChains(app.driver).context_click(  # type: ignore[no-untyped-call]
+                page.events_cell.webelement
+            ).perform()
 
             page.event_delete.click()
             page.modal_delete.click()
 
             page.wait_for_deleting_event()
 
-            screenshot_attach(app, 'event')
+            screenshot_attach(app, 'delete_event')
         except Exception as e:
-            screenshot_attach(app, 'event_error')
+            screenshot_attach(app, 'delete_event_error')
 
             raise e
 

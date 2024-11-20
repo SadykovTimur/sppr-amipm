@@ -21,6 +21,7 @@ class MmMainPage(Page):
     menu = Menu(tag='aside')
     main = Main(tag='main')
     pdf = Component(css='[type="application/pdf"]')
+    content_pdf = Components(tag='viewer-thumbnail')
     title = Text(id='ms-sub-header-top')
     report_name = TextField(xpath='//label[text()="Название отчета"]/following::div/child::input')
     create_subreport = Button(xpath='//button[text()="Создать подотчет"]')
@@ -152,6 +153,8 @@ class MmMainPage(Page):
 
         def condition() -> bool:
             try:
+                assert self.is_loader_hidden
+
                 return self.pdf.visible
 
             except NoSuchElementException:
@@ -179,21 +182,5 @@ class MmMainPage(Page):
 
         self.app.set_implicitly_wait(1)
         wait_for(condition, timeout=40, msg='Форма создания подотчета не загружена')
-        self.app.restore_implicitly_wait()
-        self.driver.switch_to.default_content()
-
-    def wait_for_loading_publication(self) -> None:
-        def condition() -> bool:
-            try:
-                assert self.main.publication_content.visible
-
-                return self.main.publication_metrics.visible
-
-            except NoSuchElementException:
-
-                return False
-
-        self.app.set_implicitly_wait(1)
-        wait_for(condition, timeout=40, msg='Форма просмотра публикации не загружена')
         self.app.restore_implicitly_wait()
         self.driver.switch_to.default_content()

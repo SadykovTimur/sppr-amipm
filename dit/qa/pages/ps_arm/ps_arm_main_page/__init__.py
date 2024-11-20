@@ -74,7 +74,7 @@ class PsArmMainPage(Page):
                 return False
 
         self.app.set_implicitly_wait(1)
-        wait_for(condition, timeout=40, msg='Раздел "Статистика" за период не загружена')
+        wait_for(condition, timeout=40, msg='Раздел "Статистика" за период не загружен')
         self.app.restore_implicitly_wait()
 
     def wait_for_loading_statistics_by_users(self) -> None:
@@ -91,5 +91,5 @@ class PsArmMainPage(Page):
                 return False
 
         self.app.set_implicitly_wait(1)
-        wait_for(condition, timeout=40, msg='Раздел "Статистика по пользователям" не загружена')
+        wait_for(condition, timeout=40, msg='Раздел "Статистика по пользователям" не загружен')
         self.app.restore_implicitly_wait()

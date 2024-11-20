@@ -84,9 +84,9 @@ def set_statistics_date(app: Application) -> None:
 
             page.wait_for_loading_statistics_after_setting_date()
 
-            screenshot_attach(app, 'statistics')
+            screenshot_attach(app, 'statistics_date')
         except Exception as e:
-            screenshot_attach(app, 'statistics_error')
+            screenshot_attach(app, 'statistics_date_error')
 
             raise e
 
