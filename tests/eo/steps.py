@@ -1,13 +1,13 @@
-import allure
 import os
-from coms.qa.core.helpers import wait_for
 
+import allure
 from _pytest.fixtures import FixtureRequest
+from coms.qa.core.helpers import wait_for
 from coms.qa.fixtures.application import Application
 from coms.qa.frontend.helpers.attach_helper import screenshot_attach
 from selenium.webdriver import ActionChains, Keys
 
-from dit.qa.api.upload import upload
+from dit.qa.api.upload import get_event_materials_id, save_file, upload
 from dit.qa.helpers import filter_logs
 from dit.qa.pages.eo.eo_auth_page import EOAuthPage
 from dit.qa.pages.eo.eo_main_page import EOMainPage
@@ -24,6 +24,7 @@ __all__ = [
     'editing_grid_cell',
     'move_event',
     'open_event',
+    'upload_files',
     'delete_event',
 ]
 
@@ -183,7 +184,7 @@ def move_event(app: Application, text: str, x_coord: int, y_coord: int) -> None:
 
 
 def open_event(app: Application) -> None:
-    with allure.step('Opening event'):
+    with allure.step('Opening Event'):
         try:
             page = EOMainPage(app)
             ActionChains(app.driver).double_click(  # type: ignore[no-untyped-call]
@@ -192,23 +193,44 @@ def open_event(app: Application) -> None:
 
             page.edit.click()
 
-            # page.wait_for_loadig_edit_mode()
-            token = wait_message_in_logs(app, 'My')
-            upload('https://office.mos.ru/api/new/Document/Upload', token, f"{os.getcwd()}/newfile.txt")
-
-            # page.upload.wait_for_visibility().webelement.send_keys("/Users/ilyasusharin/PycharmProjects/sppr-amipm/dit/qa/test_files/test_file7.txt")
-            # page.upload.webelement.send_keys("dit/qa/test_files/test_file2.txt")
-            # page.upload.webelement.send_keys("dit/qa/test_files/test_file3.txt")
-            # page.upload.webelement.send_keys("dit/qa/test_files/test_file4.txt")
-            # page.upload.webelement.send_keys("dit/qa/test_files/test_file5.txt")
-
-            page.save.click()
-
-            screenshot_attach(app, 'event')
+            screenshot_attach(app, 'open_event')
         except Exception as e:
-            screenshot_attach(app, 'event_error')
+            screenshot_attach(app, 'open_event_error')
 
             raise e
+
+
+def upload_files(app: Application) -> None:
+    with allure.step('Uploading Files in event'):
+        try:
+            page = EOMainPage(app)
+            token = wait_message_in_logs(app, 'My')
+            temp_file_ids = []
+            file_names = []
+            materials_id = get_event_materials_id(token)
+
+            for number in range(1, 6):
+                temp_file_id = upload(
+                    'https://office.mos.ru/api/new/Document/Upload',
+                    token,
+                    f"{os.getcwd()}/test_files/test_file{number}.txt",
+                )
+                temp_file_ids.append(temp_file_id)
+                file_names.append(f"test_file{number}.txt")
+
+            save_file(token, temp_file_ids, materials_id, file_names)
+
+            app.driver.refresh()
+
+            page.wait_for_uploading_files()
+
+            screenshot_attach(app, 'upload_files')
+        except Exception as e:
+            screenshot_attach(app, 'upload_files_error')
+
+            raise e
+
+        page.close.click()
 
 
 def delete_event(app: Application) -> None:
@@ -240,7 +262,7 @@ def wait_message_in_logs(app: Application, url: str) -> str:
             assert f_logs
             return f_logs[0]['message']['params']['headers']['authorization']
 
-        except [IndexError, AssertionError]:
+        except (IndexError, AssertionError):
 
             return False
 

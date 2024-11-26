@@ -15,6 +15,7 @@ from tests.eo.steps import (
     open_eo_main_page,
     open_event,
     sign_in,
+    upload_files,
 )
 
 
@@ -37,5 +38,6 @@ def test_event_upload_files(
     create_event(app, '09:30\nТест')
 
     open_event(app)
+    upload_files(app)
 
     delete_event(app)

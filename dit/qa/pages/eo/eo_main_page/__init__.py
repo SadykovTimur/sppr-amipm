@@ -24,9 +24,9 @@ class EOMainPage(Page):
     events_cell = Component(css='[class*="event-harness"]')
     time_event = Text(xpath='//div[text()="Тест"]/parent::div//child::p')
     edit = Button(xpath='//button[text()="Редактирование"]')
-    folder = Component(css='[class*="tree-folder"]')
-    upload = Component(css='[class*="jedqz"]')
+    files = Components(xpath='//p[contains(text(), "test_file")]')
     save = Button(xpath='//button[text()="Сохранить"]')
+    close = Button(xpath='//button[text()="Закрыть"]')
     event_delete = Button(xpath='//div[text()="Удалить"]')
     modal_delete = Button(xpath='//button[text()="Удалить"]')
 
@@ -106,19 +106,17 @@ class EOMainPage(Page):
         wait_for(condition, msg='Событие не было сохранено')
         self.app.restore_implicitly_wait()
 
-    def wait_for_loadig_edit_mode(self) -> None:
+    def wait_for_uploading_files(self) -> None:
         def condition() -> bool:
             try:
-                assert self.folder.visible
-
-                return self.save.visible
+                return len(self.files) == 5
 
             except NoSuchElementException:
 
                 return False
 
         self.app.set_implicitly_wait(1)
-        wait_for(condition, msg='')
+        wait_for(condition, msg='Файлы не были загружены')
         self.app.restore_implicitly_wait()
 
     def wait_for_deleting_event(self) -> None:
